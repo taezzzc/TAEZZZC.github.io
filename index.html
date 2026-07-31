@@ -23,20 +23,6 @@ body{font-family:-apple-system,"Microsoft YaHei",sans-serif;background:#f0f2f5;c
 .tp-conf-high{background:#4caf50;color:#fff}
 .tp-conf-mid{background:#ff9800;color:#fff}
 .tp-conf-low{background:#666;color:#ccc}
-.ai-panel{background:linear-gradient(135deg,#1a0533,#2d1b69,#0f3460);border-radius:12px;padding:12px;margin-bottom:10px;color:#fff;position:relative;overflow:hidden}
-.ai-panel::before{content:'';position:absolute;top:-30px;right:-30px;width:80px;height:80px;background:rgba(255,215,0,0.08);border-radius:50%}
-.ai-panel::after{content:'';position:absolute;bottom:-20px;left:-20px;width:60px;height:60px;background:rgba(255,215,0,0.06);border-radius:50%}
-.ai-panel-title{font-size:14px;font-weight:700;margin-bottom:8px;display:flex;align-items:center;gap:6px;position:relative;z-index:1}
-.ai-recs{display:flex;gap:6px;flex-wrap:wrap;position:relative;z-index:1}
-.ai-rec-card{flex:1;min-width:95px;background:rgba(255,255,255,0.08);border-radius:8px;padding:8px;text-align:center;border:1px solid rgba(255,255,255,0.1)}
-.ai-rec-card .rec-type{font-size:9px;opacity:0.7;margin-bottom:3px}
-.ai-rec-card .rec-match{font-size:11px;font-weight:600}
-.ai-rec-card .rec-pick{font-size:14px;font-weight:800;color:#ffd700;margin:3px 0}
-.ai-rec-card .rec-sp{font-size:10px;opacity:0.8}
-.ai-rec-card .rec-reason{font-size:8px;opacity:0.6;margin-top:1px}
-.rec-safe{border-left:3px solid #4caf50}
-.rec-cold{border-left:3px solid #ff9800}
-.rec-score{border-left:3px solid #2196f3}
 .tab-bar{display:flex;gap:4px;margin-bottom:10px;overflow-x:auto;padding-bottom:2px;-webkit-overflow-scrolling:touch}
 .tab-bar::-webkit-scrollbar{display:none}
 .tab-btn{flex-shrink:0;padding:5px 9px;border:1px solid #ddd;background:#fff;border-radius:14px;font-size:10px;cursor:pointer;color:#666;white-space:nowrap;min-height:28px;transition:all .15s}
@@ -154,9 +140,6 @@ body{font-family:-apple-system,"Microsoft YaHei",sans-serif;background:#f0f2f5;c
 .header h1{font-size:18px}
 .container{padding:4px}
 .expand-section{margin-left:2px;padding-left:4px}
-.ai-rec-card{padding:6px;min-width:80px}
-.ai-rec-card .rec-pick{font-size:12px}
-.ai-rec-card .rec-match{font-size:10px}
 .tp-card{min-width:100px;padding:8px}
 .tp-card .tp-pick{font-size:14px}
 }
@@ -168,10 +151,6 @@ body{font-family:-apple-system,"Microsoft YaHei",sans-serif;background:#f0f2f5;c
 <div class="today-picks" id="todayPicks">
 <div class="today-picks-title">今日精选 · 每场最佳</div>
 <div class="today-picks-list" id="todayPicksList"></div>
-</div>
-<div class="ai-panel" id="aiPanel">
-<div class="ai-panel-title">AI智能推荐</div>
-<div class="ai-recs" id="aiRecs"></div>
 </div>
 <div class="card">
 <div class="card-title">赛程日历</div>
@@ -275,21 +254,6 @@ else if(p[0]>0.40)rec.score={pick:"1-0 / 1-1",reason:"势均力敌 "+(p[0]*100).
 else if(p[2]>0.35)rec.score={pick:"0-1 / 1-2",reason:"客队占优 "+(p[2]*100).toFixed(0)+"%胜率"};
 else rec.score={pick:"1-1 / 2-1",reason:"格局开放"};
 return rec}
-
-function generateAIRecommendations(){
-var all=[];
-for(var k in ALL_DATA)for(var i=0;i<ALL_DATA[k].matches.length;i++){
-var m=ALL_DATA[k].matches[i];if(m.spf[0]===0)continue;
-var r=perMatchRecommendations(m,k,i);
-all.push({match:m,rec:r,score:calcMatchScore(m),upset:calcUpsetAlert(m)});
-}
-var sf=all.filter(function(a){return a.rec.safe&&a.rec.safe.conf==="高"});sf.sort(function(a,b){return a.rec.safe.sp-b.rec.safe.sp});
-if(sf.length===0)sf=all.filter(function(a){return a.rec.safe&&a.rec.safe.conf!=="低"}).sort(function(a,b){return a.rec.safe.sp-b.rec.safe.sp});
-var cl=all.filter(function(a){return a.rec.cold&&a.rec.cold.conf!=="-"&&a.rec.cold.conf!=="低"});cl.sort(function(a,b){return b.upset.level-a.upset.level||a.rec.cold.sp-b.rec.cold.sp});
-var sl=all.slice().sort(function(a,b){return b.score.score-a.score.score});
-return{safe:sf.slice(0,3),cold:cl.slice(0,3),score:sl.slice(0,3)};
-}
-
 function renderTabs(){var ks=Object.keys(ALL_DATA),h="";for(var i=0;i<ks.length;i++){var k=ks[i],d=ALL_DATA[k];h+='<button class="tab-btn'+(k===currentTab?' active':'')+'" onclick="switchTab(\''+k+'\')">'+d.label+' ('+d.matches.length+'场)</button>'}document.getElementById('tabBar').innerHTML=h}
 function switchTab(k){currentTab=k;renderTabs();renderAll();var d=ALL_DATA[k];document.getElementById('headerDate').textContent='20'+k.substring(2,4)+'年'+k.substring(5,7)+'月'+k.substring(8,10)+'日 '+d.weekday}
 function renderSPSection(m,idx,dk,sec){if(sec==='spf'){var l=["胜","平","负"],h='<div class="sp-section"><div class="sp-section-label">胜平负</div><div class="sp-row">';for(var j=0;j<3;j++)h+='<label class="check-opt" id="opt_spf_'+dk+'_'+idx+'_'+j+'" onclick="toggleCheck(this)"><span class="label">'+l[j]+'</span><span class="sp-val">'+(m.spf[j]>0?m.spf[j].toFixed(2):'待定')+'</span></label>';return h+'</div></div>'}if(sec==='rqspf'){var v=m.rqspf.v,pf=m.rqspf.h.charAt(0)==='+'?"受让":"让",l=[pf+"胜","让平","让负"],h='<div class="sp-section"><div class="sp-section-label">让球（'+pf+m.rqspf.h.replace("+","")+'球）</div><div class="sp-row">';for(var j=0;j<3;j++)h+='<label class="check-opt" id="opt_rqspf_'+dk+'_'+idx+'_'+j+'" onclick="toggleCheck(this)" style="border-color:#ffe0b2"><span class="label" style="color:#e65100">'+l[j]+'</span><span class="sp-val">'+(v[j]>0?v[j].toFixed(2):'待定')+'</span></label>';return h+'</div></div>'}if(sec==='bf'){var b=m.bf||[],bl=["1:0","2:0","2:1","3:0","3:1","3:2","4:0","4:1","4:2","5:0","5:1","5:2","胜其他","0:0","1:1","2:2","3:3","平其他","0:1","0:2","1:2","0:3","1:3","2:3","0:4","1:4","2:4","0:5","1:5","2:5","负其他"],h='<div class="sp-section"><div class="sp-section-label">比分</div>';h+='<div class="bf-row"><span class="bf-group-label">胜</span>';for(var j=0;j<13;j++)h+='<label class="check-opt bf-opt" id="opt_bf_'+dk+'_'+idx+'_'+j+'" onclick="toggleCheck(this)" style="border-color:#e8f5e9"><span class="label" style="color:#2e7d32">'+bl[j]+'</span><span class="sp-val">'+(b[j]>0?b[j].toFixed(2):'待定')+'</span></label>';h+='</div><div class="bf-row"><span class="bf-group-label">平</span>';for(var j=13;j<18;j++)h+='<label class="check-opt bf-opt" id="opt_bf_'+dk+'_'+idx+'_'+j+'" onclick="toggleCheck(this)" style="border-color:#fff3e0"><span class="label" style="color:#e65100">'+bl[j]+'</span><span class="sp-val">'+(b[j]>0?b[j].toFixed(2):'待定')+'</span></label>';h+='</div><div class="bf-row"><span class="bf-group-label">负</span>';for(var j=18;j<31;j++)h+='<label class="check-opt bf-opt" id="opt_bf_'+dk+'_'+idx+'_'+j+'" onclick="toggleCheck(this)" style="border-color:#fce4ec"><span class="label" style="color:#c62828">'+bl[j]+'</span><span class="sp-val">'+(b[j]>0?b[j].toFixed(2):'待定')+'</span></label>';return h+'</div></div>'}if(sec==='bqc'){var b=m.bqc||[0,0,0,0,0,0,0,0,0],bl=["胜胜","胜平","胜负","平胜","平平","平负","负胜","负平","负负"],h='<div class="sp-section"><div class="sp-section-label">半全场</div>';h+='<div class="bf-row"><span class="bf-group-label" style="color:#2e7d32">胜</span>';for(var j=0;j<3;j++)h+='<label class="check-opt bf-opt" id="opt_bqc_'+dk+'_'+idx+'_'+j+'" onclick="toggleCheck(this)" style="border-color:#e8f5e9"><span class="label" style="color:#2e7d32">'+bl[j]+'</span><span class="sp-val">'+(b[j]>0?b[j].toFixed(2):'待定')+'</span></label>';h+='</div><div class="bf-row"><span class="bf-group-label" style="color:#e65100">平</span>';for(var j=3;j<6;j++)h+='<label class="check-opt bf-opt" id="opt_bqc_'+dk+'_'+idx+'_'+j+'" onclick="toggleCheck(this)" style="border-color:#fff3e0"><span class="label" style="color:#e65100">'+bl[j]+'</span><span class="sp-val">'+(b[j]>0?b[j].toFixed(2):'待定')+'</span></label>';h+='</div><div class="bf-row"><span class="bf-group-label" style="color:#c62828">负</span>';for(var j=6;j<9;j++)h+='<label class="check-opt bf-opt" id="opt_bqc_'+dk+'_'+idx+'_'+j+'" onclick="toggleCheck(this)" style="border-color:#fce4ec"><span class="label" style="color:#c62828">'+bl[j]+'</span><span class="sp-val">'+(b[j]>0?b[j].toFixed(2):'待定')+'</span></label>';return h+'</div></div>'}var z=m.zjq||[0,0,0,0,0,0,0,0],zl=["0","1","2","3","4","5","6","7+"],h='<div class="sp-section"><div class="sp-section-label">总进球</div><div class="sp-row">';for(var j=0;j<8;j++)h+='<label class="check-opt" id="opt_zjq_'+dk+'_'+idx+'_'+j+'" onclick="toggleCheck(this)" style="border-color:#e3f2fd"><span class="label" style="color:#1976d2">'+zl[j]+'球</span><span class="sp-val">'+(z[j]>0?z[j].toFixed(2):'待定')+'</span></label>';return h+'</div></div>'}
@@ -318,13 +282,12 @@ if(hs&&!isPast){h+=renderSPSection(m,i,currentTab,'spf');h+=renderSPSection(m,i,
 else if(hs&&isPast){h+=renderPastResult(m)}
 else{h+='<div style="font-size:10px;color:#999;margin-top:4px;">待同步：SP数据暂未更新</div>'}
 h+='</div>'}
-document.getElementById("matchList").innerHTML=h;updateCount();renderAI();renderTodayPicks()}
+document.getElementById("matchList").innerHTML=h;updateCount();renderTodayPicks()}
 
 function toggleAnalysis(dk,idx){var e=document.getElementById("analysis_"+dk+"_"+idx),ic=document.getElementById("toggleIcon_"+dk+"_"+idx);if(e.classList.contains("show")){e.classList.remove("show");ic.textContent="▶"}else{e.classList.add("show");ic.textContent="▼"}}
 function toggleExpand(dk,idx){var e=document.getElementById("expand_"+dk+"_"+idx),ic=document.getElementById("expandIcon_"+dk+"_"+idx);if(e.style.display==="block"){e.style.display="none";ic.textContent="+"}else{e.style.display="block";ic.textContent="−"}}
 function updateCardHighlight(cb){var c=cb.closest(".match-card");if(c)c.classList.toggle("selected-card",cb.checked)}
-function renderAI(){var r=generateAIRecommendations(),h="";var sf=r.safe;for(var i=0;i<3;i++){if(i<sf.length)h+='<div class="ai-rec-card rec-safe"><div class="rec-type">稳胆 #'+(i+1)+'</div><div class="rec-match">'+sf[i].match.home+' vs '+sf[i].match.away+'</div><div class="rec-pick">'+sf[i].rec.safe.pick+'</div><div class="rec-sp">SP: '+sf[i].rec.safe.sp.toFixed(2)+'</div></div>';else h+='<div class="ai-rec-card rec-safe"><div class="rec-type">稳胆 #'+(i+1)+'</div><div class="rec-match">-</div><div class="rec-pick">-</div><div class="rec-sp">待更多数据</div></div>'}var cl=r.cold;for(var i=0;i<3;i++){if(i<cl.length)h+='<div class="ai-rec-card rec-cold"><div class="rec-type">博冷 #'+(i+1)+'</div><div class="rec-match">'+cl[i].match.home+' vs '+cl[i].match.away+'</div><div class="rec-pick">'+cl[i].rec.cold.pick+'</div><div class="rec-sp">SP: '+cl[i].rec.cold.sp.toFixed(2)+'</div></div>';else h+='<div class="ai-rec-card rec-cold"><div class="rec-type">博冷 #'+(i+1)+'</div><div class="rec-match">-</div><div class="rec-pick">-</div><div class="rec-sp">待更多数据</div></div>'}var sl=r.score;for(var i=0;i<3;i++){if(i<sl.length)h+='<div class="ai-rec-card rec-score"><div class="rec-type">比分 #'+(i+1)+'</div><div class="rec-match">'+sl[i].match.home+' vs '+sl[i].match.away+'</div><div class="rec-pick">'+sl[i].rec.score.pick+'</div><div class="rec-reason">'+sl[i].rec.score.reason+'</div></div>';else h+='<div class="ai-rec-card rec-score"><div class="rec-type">比分 #'+(i+1)+'</div><div class="rec-match">-</div><div class="rec-pick">-</div><div class="rec-reason">待更多数据</div></div>'}document.getElementById("aiRecs").innerHTML=h}
-function renderTodayPicks(){var ks=Object.keys(ALL_DATA),h='';if(ks.length===0){document.getElementById('todayPicks').style.display='none';return}var tk=ks[0];if(tk!==td){document.getElementById('todayPicks').style.display='none';return}var ms=ALL_DATA[tk].matches;for(var i=0;i<ms.length;i++){var m=ms[i];if(m.spf[0]===0)continue;var ak=tk+'_'+i,a=ANALYSIS[ak],pick='',sp=0,conf='';if(a&&a.spfRec){pick=a.spfRec;var pi=["胜","平","负"].indexOf(pick);sp=m.spf[pi];conf=sp<1.5?'high':sp<2.0?'mid':'low'}else{var s=m.spf,minI=0;if(s[1]>0&&s[1]<s[minI])minI=1;if(s[2]>0&&s[2]<s[minI])minI=2;pick=["主胜","平局","客胜"][minI];sp=s[minI];conf=sp<1.5?'high':sp<2?'mid':'low'}h+='<div class="tp-card"><div class="tp-teams">'+m.home+' vs '+m.away+'</div><div class="tp-pick">'+pick+'</div><div class="tp-sp">SP: '+sp.toFixed(2)+'</div><span class="tp-conf tp-conf-'+conf+'">'+(conf==='high'?'高胜率':conf==='mid'?'较稳':'可博')+'</span></div>'}document.getElementById('todayPicksList').innerHTML=h||'<div style="font-size:11px;opacity:0.6;text-align:center;padding:8px;">今日比赛SP待同步</div>';document.getElementById('todayPicks').style.display=h?'block':'none'}
+function renderTodayPicks(){if(!ALL_DATA[td]){document.getElementById('todayPicks').style.display='none';return}var ms=ALL_DATA[td].matches,h='';for(var i=0;i<ms.length;i++){var m=ms[i];if(m.spf[0]===0)continue;var ak=td+'_'+i,a=ANALYSIS[ak],pick='',sp=0,conf='';if(a&&a.spfRec){pick=a.spfRec;var pi=["胜","平","负"].indexOf(pick);sp=m.spf[pi];conf=sp<1.5?'high':sp<2.0?'mid':'low'}else{var s=m.spf,minI=0;if(s[1]>0&&s[1]<s[minI])minI=1;if(s[2]>0&&s[2]<s[minI])minI=2;pick=["主胜","平局","客胜"][minI];sp=s[minI];conf=sp<1.5?'high':sp<2?'mid':'low'}h+='<div class="tp-card"><div class="tp-teams">'+m.home+' vs '+m.away+'</div><div class="tp-pick">'+pick+'</div><div class="tp-sp">SP: '+sp.toFixed(2)+'</div><span class="tp-conf tp-conf-'+conf+'">'+(conf==='high'?'高胜率':conf==='mid'?'较稳':'可博')+'</span></div>'}document.getElementById('todayPicksList').innerHTML=h||'<div style="font-size:11px;opacity:0.6;text-align:center;padding:8px;">今日比赛SP待同步</div>';document.getElementById('todayPicks').style.display=h?'block':'none'}
 
 function updateCount(){var cs=document.querySelectorAll(".match-check"),c=0;for(var i=0;i<cs.length;i++)if(cs[i].checked)c++;document.getElementById("selectedCount").textContent="已选 "+c+" 场"}
 
