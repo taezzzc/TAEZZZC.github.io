@@ -37,6 +37,15 @@ body{font-family:-apple-system,"Microsoft YaHei",sans-serif;background:#f0f2f5;c
 .selected-count{font-size:12px;color:#d4213d;font-weight:600;margin-bottom:4px;background:#fff0f0;display:inline-block;padding:2px 10px;border-radius:10px}
 .match-card{background:#fff;border:1px solid #eee;border-radius:8px;padding:10px;margin-bottom:8px;transition:all .2s}
 .match-card.past-card{background:#fafafa;border-color:#e8e8e8;opacity:0.75}
+.past-score{text-align:center;padding:8px 0;margin-bottom:8px;border-bottom:1px dashed #e0e0e0}
+.past-score .final-score{font-size:24px;font-weight:800;color:#1a1a2e;letter-spacing:2px}
+.past-score .ht-score{font-size:11px;color:#999;margin-top:2px}
+.past-result-row{display:flex;align-items:center;gap:4px;flex-wrap:wrap;margin:3px 0;padding:2px 4px}
+.past-result-label{font-size:10px;color:#888;font-weight:700;min-width:36px}
+.past-result-opts{display:flex;gap:4px;flex-wrap:wrap}
+.past-opt{display:inline-flex;align-items:center;gap:3px;padding:3px 7px;border-radius:6px;font-size:10px;border:1px solid #e8e8e8;background:#f5f5f5;color:#bbb}
+.past-opt.hit{background:#e8f5e9;color:#2e7d32;border-color:#a5d6a7;font-weight:700}
+.past-opt.hit .past-sp{color:#2e7d32}
 .match-card-top{display:flex;align-items:flex-start;gap:8px;margin-bottom:6px}
 .match-card .chk-col{flex-shrink:0;padding-top:2px}
 .match-card .chk-col input{width:18px;height:18px;accent-color:#d4213d;cursor:pointer}
@@ -164,12 +173,12 @@ body{font-family:-apple-system,"Microsoft YaHei",sans-serif;background:#f0f2f5;c
 <script>
 var ALL_DATA={
 "2026-07-30":{label:"7月30日 周四",weekday:"周四",matches:[
-{id:"001",league:"欧罗巴",home:"中日德兰",away:"贝西克塔斯",time:"01:00",note:"首回合贝西克塔斯1-0",spf:[1.72,3.70,3.60],rqspf:{h:"-1",v:[3.10,3.60,1.89]},bqc:[3.2, 15.0, 28.0, 4.5, 5.5, 8.0, 28.0, 18.0, 6.0],bf:[6.5, 8.5, 7.0, 15.0, 12.0, 18.0, 35.0, 30.0, 40.0, 80.0, 60.0, 80.0, 100.0, 9.0, 6.0, 14.0, 50.0, 150.0, 7.5, 14.0, 8.5, 35.0, 22.0, 25.0, 80.0, 60.0, 70.0, 200.0, 150.0, 180.0, 250.0],zjq:[8.5,4.0,3.6,3.8,5.5,8.0,15.0,20.0]},
-{id:"002",league:"欧罗巴",home:"帕福斯",away:"斯普利特海杜克",time:"01:00",note:"首回合海杜克2-1",spf:[1.80,3.48,3.50],rqspf:{h:"-1",v:[3.62,3.40,1.79]},bqc:[3.5, 16.0, 30.0, 5.0, 5.8, 8.5, 30.0, 19.0, 6.5],bf:[6.0, 8.0, 7.0, 16.0, 13.0, 19.0, 35.0, 30.0, 40.0, 80.0, 60.0, 80.0, 100.0, 8.5, 5.5, 13.0, 50.0, 150.0, 7.0, 13.0, 8.0, 32.0, 20.0, 23.0, 75.0, 55.0, 65.0, 180.0, 140.0, 170.0, 250.0],zjq:[9.0,4.2,3.5,3.5,5.0,8.5,16.0,22.0]},
-{id:"003",league:"欧罗巴",home:"安德莱赫特",away:"哈马比",time:"02:30",note:"首回合1-1",spf:[2.02,3.45,2.90],rqspf:{h:"-1",v:[4.15,3.80,1.60]},bqc:[4.2, 17.0, 25.0, 5.5, 5.0, 6.5, 28.0, 16.0, 5.0],bf:[5.0, 7.0, 6.5, 12.0, 10.0, 15.0, 25.0, 22.0, 30.0, 60.0, 50.0, 65.0, 90.0, 10.0, 6.5, 16.0, 60.0, 180.0, 9.0, 18.0, 10.0, 40.0, 28.0, 30.0, 100.0, 80.0, 90.0, 250.0, 200.0, 220.0, 300.0],zjq:[8.0,4.0,3.8,3.8,5.5,9.0,15.0,18.0]},
-{id:"004",league:"欧罗巴",home:"费伦茨瓦罗斯",away:"特温特",time:"02:30",note:"首回合费伦茨客场2-1",spf:[2.85,3.60,2.00],rqspf:{h:"+1",v:[1.61,3.83,4.05]},bqc:[6.0, 18.0, 22.0, 7.0, 5.5, 4.0, 30.0, 15.0, 3.2],bf:[7.0, 14.0, 9.0, 30.0, 20.0, 25.0, 70.0, 55.0, 65.0, 150.0, 120.0, 140.0, 200.0, 9.0, 6.0, 14.0, 55.0, 170.0, 6.0, 11.0, 7.5, 28.0, 18.0, 20.0, 65.0, 50.0, 60.0, 160.0, 130.0, 150.0, 220.0],zjq:[7.5,3.8,3.8,4.0,6.0,9.5,16.0,20.0]},
-{id:"005",league:"欧罗巴",home:"本菲卡",away:"圣加仑",time:"03:00",note:"首回合圣加仑2-1爆冷",spf:[1.12,7.95,15.57],rqspf:{h:"-2",v:[2.15,3.90,2.45]},bqc:[1.5, 8.0, 22.0, 2.8, 12.0, 30.0, 25.0, 35.0, 40.0],bf:[4.5, 5.5, 5.0, 7.0, 6.0, 12.0, 10.0, 9.0, 15.0, 20.0, 18.0, 30.0, 50.0, 14.0, 9.0, 22.0, 80.0, 200.0, 20.0, 40.0, 28.0, 100.0, 80.0, 90.0, 250.0, 200.0, 220.0, 500.0, 400.0, 450.0, 500.0],zjq:[12.0,5.5,3.2,3.0,4.5,7.0,12.0,15.0]},
-{id:"006",league:"巴甲",home:"科林蒂安",away:"巴拉纳竞技",time:"06:30",note:"科林蒂主场龙",spf:[1.72,3.15,4.35],rqspf:{h:"-1",v:[3.62,3.15,1.87]},bqc:[3.0, 14.0, 32.0, 4.2, 4.8, 9.0, 35.0, 20.0, 8.0],bf:[5.5, 7.5, 6.5, 13.0, 11.0, 16.0, 28.0, 24.0, 35.0, 65.0, 55.0, 70.0, 100.0, 10.0, 6.5, 15.0, 55.0, 170.0, 9.0, 18.0, 10.5, 42.0, 30.0, 32.0, 110.0, 85.0, 95.0, 280.0, 220.0, 250.0, 350.0],zjq:[9.5,4.5,3.8,4.2,6.0,10.0,18.0,25.0]}
+{id:"001",league:"欧罗巴",home:"中日德兰",away:"贝西克塔斯",time:"01:00",note:"首回合贝西克塔斯1-0",spf:[1.72,3.70,3.60],rqspf:{h:"-1",v:[3.10,3.60,1.89]},bqc:[3.2, 15.0, 28.0, 4.5, 5.5, 8.0, 28.0, 18.0, 6.0],bf:[6.5, 8.5, 7.0, 15.0, 12.0, 18.0, 35.0, 30.0, 40.0, 80.0, 60.0, 80.0, 100.0, 9.0, 6.0, 14.0, 50.0, 150.0, 7.5, 14.0, 8.5, 35.0, 22.0, 25.0, 80.0, 60.0, 70.0, 200.0, 150.0, 180.0, 250.0],zjq:[8.5,4.0,3.6,3.8,5.5,8.0,15.0,20.0],result:{score:"0-2",htScore:"0-1",spf:"负",zjq:"2",bqc:"负负",rqspf:"让负"}},
+{id:"002",league:"欧罗巴",home:"帕福斯",away:"斯普利特海杜克",time:"01:00",note:"首回合海杜克2-1",spf:[1.80,3.48,3.50],rqspf:{h:"-1",v:[3.62,3.40,1.79]},bqc:[3.5, 16.0, 30.0, 5.0, 5.8, 8.5, 30.0, 19.0, 6.5],bf:[6.0, 8.0, 7.0, 16.0, 13.0, 19.0, 35.0, 30.0, 40.0, 80.0, 60.0, 80.0, 100.0, 8.5, 5.5, 13.0, 50.0, 150.0, 7.0, 13.0, 8.0, 32.0, 20.0, 23.0, 75.0, 55.0, 65.0, 180.0, 140.0, 170.0, 250.0],zjq:[9.0,4.2,3.5,3.5,5.0,8.5,16.0,22.0],result:{score:"2-0",htScore:"1-0",spf:"胜",zjq:"2",bqc:"胜胜",rqspf:"让胜"}},
+{id:"003",league:"欧罗巴",home:"安德莱赫特",away:"哈马比",time:"02:30",note:"首回合1-1",spf:[2.02,3.45,2.90],rqspf:{h:"-1",v:[4.15,3.80,1.60]},bqc:[4.2, 17.0, 25.0, 5.5, 5.0, 6.5, 28.0, 16.0, 5.0],bf:[5.0, 7.0, 6.5, 12.0, 10.0, 15.0, 25.0, 22.0, 30.0, 60.0, 50.0, 65.0, 90.0, 10.0, 6.5, 16.0, 60.0, 180.0, 9.0, 18.0, 10.0, 40.0, 28.0, 30.0, 100.0, 80.0, 90.0, 250.0, 200.0, 220.0, 300.0],zjq:[8.0,4.0,3.8,3.8,5.5,9.0,15.0,18.0],result:{score:"3-1",htScore:"0-1",spf:"胜",zjq:"4",bqc:"负胜",rqspf:"让胜"}},
+{id:"004",league:"欧罗巴",home:"费伦茨瓦罗斯",away:"特温特",time:"02:30",note:"首回合费伦茨客场2-1",spf:[2.85,3.60,2.00],rqspf:{h:"+1",v:[1.61,3.83,4.05]},bqc:[6.0, 18.0, 22.0, 7.0, 5.5, 4.0, 30.0, 15.0, 3.2],bf:[7.0, 14.0, 9.0, 30.0, 20.0, 25.0, 70.0, 55.0, 65.0, 150.0, 120.0, 140.0, 200.0, 9.0, 6.0, 14.0, 55.0, 170.0, 6.0, 11.0, 7.5, 28.0, 18.0, 20.0, 65.0, 50.0, 60.0, 160.0, 130.0, 150.0, 220.0],zjq:[7.5,3.8,3.8,4.0,6.0,9.5,16.0,20.0],result:{score:"2-2",htScore:"2-1",spf:"平",zjq:"4",bqc:"胜平",rqspf:"让胜"}},
+{id:"005",league:"欧罗巴",home:"本菲卡",away:"圣加仑",time:"03:00",note:"首回合圣加仑2-1爆冷",spf:[1.12,7.95,15.57],rqspf:{h:"-2",v:[2.15,3.90,2.45]},bqc:[1.5, 8.0, 22.0, 2.8, 12.0, 30.0, 25.0, 35.0, 40.0],bf:[4.5, 5.5, 5.0, 7.0, 6.0, 12.0, 10.0, 9.0, 15.0, 20.0, 18.0, 30.0, 50.0, 14.0, 9.0, 22.0, 80.0, 200.0, 20.0, 40.0, 28.0, 100.0, 80.0, 90.0, 250.0, 200.0, 220.0, 500.0, 400.0, 450.0, 500.0],zjq:[12.0,5.5,3.2,3.0,4.5,7.0,12.0,15.0],result:{score:"5-0",htScore:"1-0",spf:"胜",zjq:"5",bqc:"胜胜",rqspf:"让胜"}},
+{id:"006",league:"巴甲",home:"科林蒂安",away:"巴拉纳竞技",time:"06:30",note:"科林蒂主场龙",spf:[1.72,3.15,4.35],rqspf:{h:"-1",v:[3.62,3.15,1.87]},bqc:[3.0, 14.0, 32.0, 4.2, 4.8, 9.0, 35.0, 20.0, 8.0],bf:[5.5, 7.5, 6.5, 13.0, 11.0, 16.0, 28.0, 24.0, 35.0, 65.0, 55.0, 70.0, 100.0, 10.0, 6.5, 15.0, 55.0, 170.0, 9.0, 18.0, 10.5, 42.0, 30.0, 32.0, 110.0, 85.0, 95.0, 280.0, 220.0, 250.0, 350.0],zjq:[9.5,4.5,3.8,4.2,6.0,10.0,18.0,25.0],result:{score:"0-0",htScore:"0-0",spf:"平",zjq:"0",bqc:"平平",rqspf:"让负"}}
 ]},
 "2026-07-31":{label:"7月31日 周五",weekday:"周五",matches:[
 {id:"001",league:"挪超",home:"瓦勒伦加",away:"汉坎",time:"01:00",note:"竞彩周五期",spf:[1.47,4.25,4.70],rqspf:{h:"-1",v:[2.43,3.65,2.25]},bqc:[2.5, 12.0, 30.0, 3.8, 6.5, 10.0, 32.0, 22.0, 8.5],bf:[4.8, 6.5, 6.0, 11.0, 9.5, 13.0, 22.0, 19.0, 25.0, 50.0, 42.0, 55.0, 80.0, 9.5, 6.0, 15.0, 55.0, 160.0, 10.0, 20.0, 11.0, 45.0, 32.0, 35.0, 120.0, 90.0, 100.0, 300.0, 240.0, 260.0, 400.0],zjq:[7.0,3.5,3.4,4.2,6.5,10.0,18.0,25.0]},
@@ -207,7 +216,7 @@ var ALL_DATA={
 {id:"001",league:"欧冠",home:"待定",away:"待定",time:"待定",note:"待同步",spf:[0,0,0],bqc:[0,0,0,0,0,0,0,0,0],bf:[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],zjq:[0,0,0,0,0,0,0,0],rqspf:{h:"-1",v:[0,0,0]}},
 {id:"002",league:"欧冠",home:"待定",away:"待定",time:"待定",note:"待同步",spf:[0,0,0],bqc:[0,0,0,0,0,0,0,0,0],bf:[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],zjq:[0,0,0,0,0,0,0,0],rqspf:{h:"-1",v:[0,0,0]}}
 ]}};
-var today=new Date();var td=today.getFullYear()+'-'+String(today.getMonth()+1).padStart(2,'0')+'-'+String(today.getDate()).padStart(2,'0');var currentTab=(ALL_DATA[td]?td:Object.keys(ALL_DATA).sort().find(function(k){return k>=td})||Object.keys(ALL_DATA).sort().pop());
+var today=new Date();var td=today.getFullYear()+'-'+String(today.getMonth()+1).padStart(2,'0')+'-'+String(today.getDate()).padStart(2,'0');var yesterday=new Date(today);yesterday.setDate(today.getDate()-1);var yd=yesterday.getFullYear()+'-'+String(yesterday.getMonth()+1).padStart(2,'0')+'-'+String(yesterday.getDate()).padStart(2,'0');var day7=new Date(today);day7.setDate(today.getDate()+7);var d7=day7.getFullYear()+'-'+String(day7.getMonth()+1).padStart(2,'0')+'-'+String(day7.getDate()).padStart(2,'0');(function(){var ks=Object.keys(ALL_DATA);for(var i=0;i<ks.length;i++){if(ks[i]<yd||ks[i]>d7)delete ALL_DATA[ks[i]]}})();var currentTab=(ALL_DATA[td]?td:Object.keys(ALL_DATA).sort().find(function(k){return k>=td})||Object.keys(ALL_DATA).sort().pop());
 function calcReturnRate(s){var sum=0;for(var i=0;i<3;i++)if(s[i]>0)sum+=1/s[i];return sum>0?1/sum:0}
 function calcImpliedProb(s){var r=calcReturnRate(s);if(r===0)return[0,0,0];return s.map(function(o){return o>0?r/o:0})}
 function euroToJcSP(o){return o.map(function(x){return x>0?+(x*0.71).toFixed(2):0})}
@@ -274,6 +283,7 @@ return'<div class="analysis-detail" id="analysis_'+dk+'_'+idx+'">'+getPerMatchRe
 '<tr><td>综合评分</td><td><span class="score-badge '+sc.level+'">'+sc.score.toFixed(1)+'分</span></td><td>'+sc.text+' ('+(sc.details||[]).join(", ")+')</td></tr></table></div>';
 }
 
+function renderPastResult(m){var r=m.result;if(!r)return'<div style="font-size:11px;color:#999;padding:6px 0;">本场比赛已结束</div>';var h='';h+='<div class="past-score"><div class="final-score">'+r.score.replace("-"," : ")+'</div><div class="ht-score">（半场 '+r.htScore+'）</div></div>';var spfLabels=["胜","平","负"];h+='<div class="past-result-row"><span class="past-result-label">胜平负</span><div class="past-result-opts">';for(var j=0;j<3;j++){var isHit=spfLabels[j]===r.spf;h+='<span class="past-opt'+(isHit?' hit':'')+'">'+spfLabels[j]+' <span class="past-sp">'+(m.spf[j]>0?m.spf[j].toFixed(2):'-')+'</span></span>'}h+='</div></div>';var rqpf=m.rqspf.h.charAt(0)==='+'?"受让":"让";var rqLabels=[rqpf+"胜","让平","让负"];h+='<div class="past-result-row"><span class="past-result-label">让球</span><div class="past-result-opts">';for(var j=0;j<3;j++){var isHit2=rqLabels[j]===r.rqspf;h+='<span class="past-opt'+(isHit2?' hit':'')+'">'+rqLabels[j]+' <span class="past-sp">'+(m.rqspf.v[j]>0?m.rqspf.v[j].toFixed(2):'-')+'</span></span>'}h+='</div></div>';var zjqLabels=["0","1","2","3","4","5","6","7+"];h+='<div class="past-result-row"><span class="past-result-label">总进球</span><div class="past-result-opts">';for(var j=0;j<8;j++){var zh=zjqLabels[j]===r.zjq;h+='<span class="past-opt'+(zh?' hit':'')+'">'+zjqLabels[j]+'球 <span class="past-sp">'+(m.zjq[j]>0?m.zjq[j].toFixed(2):'-')+'</span></span>'}h+='</div></div>';var bqcLabels=["胜胜","胜平","胜负","平胜","平平","平负","负胜","负平","负负"];h+='<div class="past-result-row"><span class="past-result-label">半全场</span><div class="past-result-opts">';for(var j=0;j<9;j++){var bh=bqcLabels[j]===r.bqc;h+='<span class="past-opt'+(bh?' hit':'')+'">'+bqcLabels[j]+' <span class="past-sp">'+(m.bqc[j]>0?m.bqc[j].toFixed(2):'-')+'</span></span>'}h+='</div></div>';return h}
 function renderAll(){
 var ms=ALL_DATA[currentTab].matches,h="",isPast=currentTab<td;
 for(var i=0;i<ms.length;i++){
@@ -289,7 +299,7 @@ if(ha.type==='ok')badge+='<span class="prob-badge prob-'+(ha.coverLevel==='高'?
 var chkHTML=isPast?'<span style="background:#c62828;color:#fff;font-size:10px;padding:2px 6px;border-radius:3px;display:inline-block;">已结束</span>':'<input type="checkbox" class="match-check" id="chk_'+currentTab+'_'+i+'" onchange="updateCount();updateCardHighlight(this)">';
 h+='<div class="match-card'+(isPast?' past-card':'')+'" id="card_'+currentTab+'_'+i+'"><div class="match-card-top"><div class="chk-col">'+chkHTML+'</div><div class="info-col"><div class="info-row1"><span class="match-id" style="color:'+(lc[m.league]||"#666")+'">'+m.league.charAt(0)+m.id+'</span><span class="match-league">'+m.league+'</span></div><div class="match-teams">'+m.home+' vs '+m.away+'</div><div class="info-row2"><span class="match-time">'+m.time+'</span><span class="match-note">'+m.note+'</span></div>'+(hs?'<div class="info-row3">'+badge+'</div>':'')+'</div></div>';
 if(hs&&!isPast){h+=renderSPSection(m,i,currentTab,'spf');h+=renderSPSection(m,i,currentTab,'rqspf');h+='<button class="expand-btn" onclick="toggleExpand(\''+currentTab+'\','+i+')"><span id="expandIcon_'+currentTab+'_'+i+'">+</span> 总进球 / 比分 / 半全场</button><div class="expand-section" id="expand_'+currentTab+'_'+i+'">'+renderSPSection(m,i,currentTab,'zjq')+renderSPSection(m,i,currentTab,'bf')+renderSPSection(m,i,currentTab,'bqc')+'</div>';h+='<button class="analysis-toggle" onclick="toggleAnalysis(\''+currentTab+'\','+i+')"><span id="toggleIcon_'+currentTab+'_'+i+'">▶</span> 查看详细分析（稳胆/博冷/比分/盘口/评分）</button>'+getAnalysisHTML(m,currentTab,i)}
-else if(hs&&isPast){h+='<div style="font-size:11px;color:#999;padding:6px 0;">本场比赛已结束，不再接受投注</div>'}
+else if(hs&&isPast){h+=renderPastResult(m)}
 else{h+='<div style="font-size:10px;color:#999;margin-top:4px;">待同步：SP数据暂未更新</div>'}
 h+='</div>'}
 document.getElementById("matchList").innerHTML=h;updateCount();renderAI()}
@@ -303,10 +313,11 @@ function updateCount(){var cs=document.querySelectorAll(".match-check"),c=0;for(
 
 function calculate(){
 var cks=document.querySelectorAll(".match-check:checked");
-if(cks.length===0){document.getElementById("resultContent").innerHTML='<p style="color:#d4213d;font-weight:600;">请至少选择1场比赛的选项</p>';return}
+var validCks=[];for(var i=0;i<cks.length;i++){var card=cks[i].closest(".match-card");if(card&&!card.classList.contains("past-card"))validCks.push(cks[i])}
+if(validCks.length===0){document.getElementById("resultContent").innerHTML='<p style="color:#d4213d;font-weight:600;">请至少选择1场比赛的选项</p>';return}
 var fo=[],ml=[];
-for(var ci=0;ci<cks.length;ci++){
-var cb=cks[ci],ps=cb.id.split("_"),dk=ps[1],idx=parseInt(ps[2]),m=ALL_DATA[dk].matches[idx];
+for(var ci=0;ci<validCks.length;ci++){
+var cb=validCks[ci],ps=cb.id.split("_"),dk=ps[1],idx=parseInt(ps[2]),m=ALL_DATA[dk].matches[idx];
 var lb=m.league.charAt(0)+m.id+" "+m.home+"vs"+m.away;
 var card=cb.closest(".match-card"),allSel=card.querySelectorAll(".check-opt.selected");
 if(allSel.length===0){ml.push(lb+": 未选择任何选项");continue}
