@@ -11,6 +11,18 @@ body{font-family:-apple-system,"Microsoft YaHei",sans-serif;background:#f0f2f5;c
 .header h1{font-size:22px;font-weight:800;letter-spacing:2px}
 .header .sub{font-size:10px;opacity:0.7;margin-top:2px}
 .container{max-width:720px;margin:0 auto;padding:8px}
+.today-picks{background:linear-gradient(135deg,#0d1b2a,#1b2838,#415a77);border-radius:12px;padding:12px;margin-bottom:10px;color:#e0e1dd}
+.today-picks-title{font-size:14px;font-weight:700;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.today-picks-title::before{content:'★';color:#ffd700;font-size:18px}
+.today-picks-list{display:flex;gap:8px;flex-wrap:wrap}
+.tp-card{flex:1;min-width:130px;background:rgba(255,255,255,0.07);border-radius:8px;padding:10px;text-align:center;border:1px solid rgba(255,255,255,0.1)}
+.tp-card .tp-teams{font-size:11px;font-weight:600;margin-bottom:4px}
+.tp-card .tp-pick{font-size:18px;font-weight:800;color:#ffd700;margin:4px 0}
+.tp-card .tp-sp{font-size:10px;opacity:0.7}
+.tp-card .tp-conf{display:inline-block;font-size:8px;padding:1px 6px;border-radius:8px;margin-top:3px}
+.tp-conf-high{background:#4caf50;color:#fff}
+.tp-conf-mid{background:#ff9800;color:#fff}
+.tp-conf-low{background:#666;color:#ccc}
 .ai-panel{background:linear-gradient(135deg,#1a0533,#2d1b69,#0f3460);border-radius:12px;padding:12px;margin-bottom:10px;color:#fff;position:relative;overflow:hidden}
 .ai-panel::before{content:'';position:absolute;top:-30px;right:-30px;width:80px;height:80px;background:rgba(255,215,0,0.08);border-radius:50%}
 .ai-panel::after{content:'';position:absolute;bottom:-20px;left:-20px;width:60px;height:60px;background:rgba(255,215,0,0.06);border-radius:50%}
@@ -145,14 +157,20 @@ body{font-family:-apple-system,"Microsoft YaHei",sans-serif;background:#f0f2f5;c
 .ai-rec-card{padding:6px;min-width:80px}
 .ai-rec-card .rec-pick{font-size:12px}
 .ai-rec-card .rec-match{font-size:10px}
+.tp-card{min-width:100px;padding:8px}
+.tp-card .tp-pick{font-size:14px}
 }
 </style>
 </head>
 <body>
 <div class="header"><h1>Zzzc竞彩计算器</h1><div class="sub" id="headerDate">2026年07月30日 周四</div></div>
 <div class="container">
+<div class="today-picks" id="todayPicks">
+<div class="today-picks-title">今日精选 · 每场最佳</div>
+<div class="today-picks-list" id="todayPicksList"></div>
+</div>
 <div class="ai-panel" id="aiPanel">
-<div class="ai-panel-title">AI智能推荐 · 今日精选</div>
+<div class="ai-panel-title">AI智能推荐</div>
 <div class="ai-recs" id="aiRecs"></div>
 </div>
 <div class="card">
@@ -300,12 +318,13 @@ if(hs&&!isPast){h+=renderSPSection(m,i,currentTab,'spf');h+=renderSPSection(m,i,
 else if(hs&&isPast){h+=renderPastResult(m)}
 else{h+='<div style="font-size:10px;color:#999;margin-top:4px;">待同步：SP数据暂未更新</div>'}
 h+='</div>'}
-document.getElementById("matchList").innerHTML=h;updateCount();renderAI()}
+document.getElementById("matchList").innerHTML=h;updateCount();renderAI();renderTodayPicks()}
 
 function toggleAnalysis(dk,idx){var e=document.getElementById("analysis_"+dk+"_"+idx),ic=document.getElementById("toggleIcon_"+dk+"_"+idx);if(e.classList.contains("show")){e.classList.remove("show");ic.textContent="▶"}else{e.classList.add("show");ic.textContent="▼"}}
 function toggleExpand(dk,idx){var e=document.getElementById("expand_"+dk+"_"+idx),ic=document.getElementById("expandIcon_"+dk+"_"+idx);if(e.style.display==="block"){e.style.display="none";ic.textContent="+"}else{e.style.display="block";ic.textContent="−"}}
 function updateCardHighlight(cb){var c=cb.closest(".match-card");if(c)c.classList.toggle("selected-card",cb.checked)}
 function renderAI(){var r=generateAIRecommendations(),h="";var sf=r.safe;for(var i=0;i<3;i++){if(i<sf.length)h+='<div class="ai-rec-card rec-safe"><div class="rec-type">稳胆 #'+(i+1)+'</div><div class="rec-match">'+sf[i].match.home+' vs '+sf[i].match.away+'</div><div class="rec-pick">'+sf[i].rec.safe.pick+'</div><div class="rec-sp">SP: '+sf[i].rec.safe.sp.toFixed(2)+'</div></div>';else h+='<div class="ai-rec-card rec-safe"><div class="rec-type">稳胆 #'+(i+1)+'</div><div class="rec-match">-</div><div class="rec-pick">-</div><div class="rec-sp">待更多数据</div></div>'}var cl=r.cold;for(var i=0;i<3;i++){if(i<cl.length)h+='<div class="ai-rec-card rec-cold"><div class="rec-type">博冷 #'+(i+1)+'</div><div class="rec-match">'+cl[i].match.home+' vs '+cl[i].match.away+'</div><div class="rec-pick">'+cl[i].rec.cold.pick+'</div><div class="rec-sp">SP: '+cl[i].rec.cold.sp.toFixed(2)+'</div></div>';else h+='<div class="ai-rec-card rec-cold"><div class="rec-type">博冷 #'+(i+1)+'</div><div class="rec-match">-</div><div class="rec-pick">-</div><div class="rec-sp">待更多数据</div></div>'}var sl=r.score;for(var i=0;i<3;i++){if(i<sl.length)h+='<div class="ai-rec-card rec-score"><div class="rec-type">比分 #'+(i+1)+'</div><div class="rec-match">'+sl[i].match.home+' vs '+sl[i].match.away+'</div><div class="rec-pick">'+sl[i].rec.score.pick+'</div><div class="rec-reason">'+sl[i].rec.score.reason+'</div></div>';else h+='<div class="ai-rec-card rec-score"><div class="rec-type">比分 #'+(i+1)+'</div><div class="rec-match">-</div><div class="rec-pick">-</div><div class="rec-reason">待更多数据</div></div>'}document.getElementById("aiRecs").innerHTML=h}
+function renderTodayPicks(){var ks=Object.keys(ALL_DATA),h='';if(ks.length===0){document.getElementById('todayPicks').style.display='none';return}var tk=ks[0];if(tk!==td){document.getElementById('todayPicks').style.display='none';return}var ms=ALL_DATA[tk].matches;for(var i=0;i<ms.length;i++){var m=ms[i];if(m.spf[0]===0)continue;var ak=tk+'_'+i,a=ANALYSIS[ak],pick='',sp=0,conf='';if(a&&a.spfRec){pick=a.spfRec;var pi=["胜","平","负"].indexOf(pick);sp=m.spf[pi];conf=sp<1.5?'high':sp<2.0?'mid':'low'}else{var s=m.spf,minI=0;if(s[1]>0&&s[1]<s[minI])minI=1;if(s[2]>0&&s[2]<s[minI])minI=2;pick=["主胜","平局","客胜"][minI];sp=s[minI];conf=sp<1.5?'high':sp<2?'mid':'low'}h+='<div class="tp-card"><div class="tp-teams">'+m.home+' vs '+m.away+'</div><div class="tp-pick">'+pick+'</div><div class="tp-sp">SP: '+sp.toFixed(2)+'</div><span class="tp-conf tp-conf-'+conf+'">'+(conf==='high'?'高胜率':conf==='mid'?'较稳':'可博')+'</span></div>'}document.getElementById('todayPicksList').innerHTML=h||'<div style="font-size:11px;opacity:0.6;text-align:center;padding:8px;">今日比赛SP待同步</div>';document.getElementById('todayPicks').style.display=h?'block':'none'}
 
 function updateCount(){var cs=document.querySelectorAll(".match-check"),c=0;for(var i=0;i<cs.length;i++)if(cs[i].checked)c++;document.getElementById("selectedCount").textContent="已选 "+c+" 场"}
 
