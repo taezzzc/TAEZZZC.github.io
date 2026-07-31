@@ -85,6 +85,8 @@ body{font-family:-apple-system,"Microsoft YaHei",sans-serif;background:#f0f2f5;c
 .analysis-table{width:100%;border-collapse:collapse;font-size:10px;margin-bottom:8px}
 .analysis-table th{background:#eee;padding:4px 6px;text-align:center;font-weight:600}
 .analysis-table td{padding:4px 6px;text-align:center;border-bottom:1px solid #eee}
+.analysis-section{padding:8px;margin:6px 0;border-radius:6px;background:#fafafa;font-size:11px;line-height:1.6}
+.analysis-section b{display:block;margin-bottom:3px;color:#1a1a2e;font-size:12px}
 .per-match-rec{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
 .per-rec-item{flex:1;min-width:75px;padding:6px 8px;border-radius:6px;text-align:center;font-size:10px}
 .per-rec-item .pr-label{font-size:9px;color:#888;margin-bottom:2px}
@@ -216,7 +218,13 @@ var ALL_DATA={
 {id:"001",league:"欧冠",home:"待定",away:"待定",time:"待定",note:"待同步",spf:[0,0,0],bqc:[0,0,0,0,0,0,0,0,0],bf:[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],zjq:[0,0,0,0,0,0,0,0],rqspf:{h:"-1",v:[0,0,0]}},
 {id:"002",league:"欧冠",home:"待定",away:"待定",time:"待定",note:"待同步",spf:[0,0,0],bqc:[0,0,0,0,0,0,0,0,0],bf:[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],zjq:[0,0,0,0,0,0,0,0],rqspf:{h:"-1",v:[0,0,0]}}
 ]}};
-var today=new Date();var td=today.getFullYear()+'-'+String(today.getMonth()+1).padStart(2,'0')+'-'+String(today.getDate()).padStart(2,'0');var yesterday=new Date(today);yesterday.setDate(today.getDate()-1);var yd=yesterday.getFullYear()+'-'+String(yesterday.getMonth()+1).padStart(2,'0')+'-'+String(yesterday.getDate()).padStart(2,'0');var day7=new Date(today);day7.setDate(today.getDate()+7);var d7=day7.getFullYear()+'-'+String(day7.getMonth()+1).padStart(2,'0')+'-'+String(day7.getDate()).padStart(2,'0');(function(){var ks=Object.keys(ALL_DATA);for(var i=0;i<ks.length;i++){if(ks[i]<yd||ks[i]>d7)delete ALL_DATA[ks[i]]}})();var currentTab=(ALL_DATA[td]?td:Object.keys(ALL_DATA).sort().find(function(k){return k>=td})||Object.keys(ALL_DATA).sort().pop());
+var today=new Date();var td=today.getFullYear()+'-'+String(today.getMonth()+1).padStart(2,'0')+'-'+String(today.getDate()).padStart(2,'0');var yesterday=new Date(today);yesterday.setDate(today.getDate()-1);var yd=yesterday.getFullYear()+'-'+String(yesterday.getMonth()+1).padStart(2,'0')+'-'+String(yesterday.getDate()).padStart(2,'0');var day7=new Date(today);day7.setDate(today.getDate()+7);var d7=day7.getFullYear()+'-'+String(day7.getMonth()+1).padStart(2,'0')+'-'+String(day7.getDate()).padStart(2,'0');(function(){var ks=Object.keys(ALL_DATA);for(var i=0;i<ks.length;i++){if(ks[i]<td||ks[i]>d7)delete ALL_DATA[ks[i]]}})();
+var ANALYSIS={
+"2026-07-31_0":{teams:"瓦勒伦加 vs 汉坎",homeForm:"近4场3胜1平，上轮客场3-2胜布兰，两场轰9球",awayForm:"3连败，客场7场0胜，锋线头牌被挖，近2客场0进球",h2h:"首回合汉坎1-0胜，近3次瓦勒伦加不胜；主场近5次3胜2平",injuries:"瓦勒伦加：主力中卫停赛+左边卫停赛，防线双核缺阵；汉坎：锋线核心离队",scoreRec:"2-0 / 3-1",zjqRec:"2-3球",spfRec:"主胜",rqspfRec:"让平",bqcRec:"胜胜",upsetLevel:"中低",upsetReason:"主队防线双核缺阵，若开局久攻不下，汉坎死守可能闷平;首回合汉坎曾1-0爆冷",detail:"瓦勒伦加主场强势，近4主场3胜1平，进攻端两场9球火力全开。但主力中卫纳斯贝格红牌停赛+左边卫芬森累计黄牌停赛，整条防线主轴被抽掉。汉坎本赛季客场7战0胜3平4负，场均丢2.14球，堪称客场虫。锋线头牌尼昂刚被波尔图挖走，进攻端彻底哑火。盘口主让1球，SP主胜低至1.47，机构对主胜预期一致。鉴于防线缺口，穿盘存在变数，让平是性价比之选。"},
+"2026-07-31_1":{teams:"博德闪耀 vs 利勒斯特罗姆",homeForm:"4连胜且全零封，主场7战6胜1负，挪超榜首",awayForm:"排第4，客场战绩联赛前三，上轮1-2负维京结束2连胜",h2h:"近5次博德闪耀全胜，但利勒每次都能打出威胁反击",injuries:"博德：头号射手霍格离队，中场埃夫延伤缺，下周欧冠资格赛分心；利勒：中场双核基托拉诺+阿尔佩鲁德受伤",scoreRec:"3-1 / 2-0",zjqRec:"3-4球",spfRec:"主胜",rqspfRec:"让平 / 让负",bqcRec:"胜胜",upsetLevel:"中",upsetReason:"头号射手离队削弱终结能力;欧冠资格赛分心轮换;利勒反击专克高位逼抢，历史交手每次都造威胁",detail:"博德闪耀本赛季挪超统治力极强，15轮11胜2平2负，主场7战6胜进20球仅失2球，是挪超最恐怖的主场。但头号射手霍格被凯尔特人挖走，中场核心埃夫延伤缺，且四天后有欧冠资格赛，双线作战体能存疑。利勒斯特罗姆客场战绩联赛前三，硬仗从不脚软，本赛季客场赢过莫尔德、平过罗森博格。锋线双人组速度奇快，专打博德压上后的身后空档。盘口主让2球深盘，SP主胜1.17极低。博德取胜几无悬念，但让2球穿盘有难度，利勒靠反击偷一球概率不低。"},
+"2026-07-31_2":{teams:"纽约城 vs 多伦多FC",homeForm:"2连胜，近8主场7胜，17场进30球场均1.76球",awayForm:"10场不胜(4平6负)，客场8战1胜，场均仅0.75球",h2h:"近5次纽约城全胜，多伦多近4次做客纽约全输，进3丢13",injuries:"多伦多：后卫4人+中场3人伤缺，主力中场奥索里奥停赛，共8人缺阵",scoreRec:"2-0 / 3-1",zjqRec:"2-3球",spfRec:"主胜",rqspfRec:"让胜",bqcRec:"胜胜",upsetLevel:"低",upsetReason:"双方实力差距悬殊，多伦多伤兵满营几乎无爆冷条件;仅靠球星个人能力偶偷一球",detail:"纽约城世界杯间歇期后2连胜，近8个主场赢下7场，主场气势如虹。进攻端17场30球火力稳定，但防守近19场仅零封1场是隐患。多伦多FC已连续10场不胜，客场8战仅1胜，伤兵名单触目惊心——后卫4人+中场3人+主力中场停赛共8人缺阵，防线几乎重组。交锋历史一边倒：近5次纽约城全胜，多伦多近4次做客纽约全败且场均丢3.25球。盘口主让1球，SP主胜1.55稳定。天时地利人和全在纽约城，穿盘概率极高，是今日最稳胆。"}
+};
+var currentTab=(ALL_DATA[td]?td:Object.keys(ALL_DATA).sort().find(function(k){return k>=td})||Object.keys(ALL_DATA).sort().pop());
 function calcReturnRate(s){var sum=0;for(var i=0;i<3;i++)if(s[i]>0)sum+=1/s[i];return sum>0?1/sum:0}
 function calcImpliedProb(s){var r=calcReturnRate(s);if(r===0)return[0,0,0];return s.map(function(o){return o>0?r/o:0})}
 function euroToJcSP(o){return o.map(function(x){return x>0?+(x*0.71).toFixed(2):0})}
@@ -224,35 +232,37 @@ function analyzeHandicap(m){var r=m.rqspf;if(!r||r.v[0]===0)return{type:"no-data
 function calcUpsetAlert(m){var s=m.spf;if(s[0]===0)return{level:0,text:"无数据",cls:"alert-none",reasons:[]};var p=calcImpliedProb(s);var as=0,rs=[];if(p[0]<0.4&&s[0]>2){as+=2;rs.push("主胜不被看好")}if(s[1]<3.2&&s[1]>0){as+=1;rs.push("平局SP偏低")}if(p[2]>0.3){as+=2;rs.push("客胜有空间")}var spR=Math.max(s[0],s[1],s[2])-Math.min(s[0],s[1],s[2]);if(spR<2&&s[0]>0){as+=1;rs.push("赔率胶着")}if(as>=4)return{level:2,text:"高冷门风险",cls:"alert-hot",reasons:rs};if(as>=2)return{level:1,text:"注意冷门",cls:"alert-cold",reasons:rs};return{level:0,text:"正常",cls:"alert-none",reasons:rs}}
 function calcMatchScore(m){var s=m.spf;if(s[0]===0)return{score:0,level:"low",text:"待同步",details:[]};var sc=5,d=[];var rr=calcReturnRate(s);if(s[0]<1.4){sc+=2;d.push("超级热门+2")}else if(s[0]<1.8){sc+=1.5;d.push("明显优势+1.5")}else if(s[0]<2.2){sc+=0.5;d.push("略微优势+0.5")}if(rr>0.92){sc+=1.5;d.push("高返还率+1.5")}else if(rr>0.88){sc+=0.8;d.push("正常返还+0.8")}var spr=Math.max(s[0],s[2])-Math.min(s[0],s[2]);if(spr>5){sc+=1;d.push("方向明确+1")}else if(spr<1.5){sc-=1;d.push("高度胶着-1")}var rq=m.rqspf;if(rq&&rq.v[0]>0){var rqR=1/(1/rq.v[0]+1/rq.v[1]+1/rq.v[2]),rqP=rqR/rq.v[0];if(rqP>0.45&&rqP<0.55){sc+=0.5;d.push("盘口均衡+0.5")}}sc=Math.max(1,Math.min(10,Math.round(sc*10)/10));var lv=sc>=7?"high":sc>=4?"mid":"low";var tx=sc>=7?"优质赛事":sc>=4?"一般赛事":"谨慎对待";return{score:sc,level:lv,text:tx,details:d}}
 
-function perMatchRecommendations(m){
+function perMatchRecommendations(m,dk,i){
+var ak=dk+'_'+i,a=ANALYSIS[ak];
 if(m.spf[0]===0)return{};
 var s=m.spf,p=calcImpliedProb(s),sc=calcMatchScore(m),up=calcUpsetAlert(m);
 var rec={};
 // 稳胆
-if(s[0]<1.8&&sc.score>=5)rec.safe={pick:"主胜",sp:s[0],conf:"高",reason:"主队强势 SP"+s[0].toFixed(2)+" 评分"+sc.score.toFixed(1)};
+if(a&&a.spfRec){rec.safe={pick:a.spfRec,sp:s[["胜","平","负"].indexOf(a.spfRec)],conf:a.spfRec==="主胜"&&s[0]<1.6?"高":"中",reason:a.detail.substring(0,20)+"..."}}
+else if(s[0]<1.8&&sc.score>=5)rec.safe={pick:"主胜",sp:s[0],conf:"高",reason:"主队强势 SP"+s[0].toFixed(2)+" 评分"+sc.score.toFixed(1)};
 else if(s[2]<1.8&&sc.score>=5)rec.safe={pick:"客胜",sp:s[2],conf:"高",reason:"客队强势 SP"+s[2].toFixed(2)+" 评分"+sc.score.toFixed(1)};
-else if(s[0]<2.2)rec.safe={pick:"主胜",sp:s[0],conf:"中",reason:"主队占优 SP"+s[0].toFixed(2)};
-else if(s[2]<2.2)rec.safe={pick:"客胜",sp:s[2],conf:"中",reason:"客队占优 SP"+s[2].toFixed(2)};
+else if(s[0]<2.4)rec.safe={pick:"主胜",sp:s[0],conf:"中",reason:"主队占优 SP"+s[0].toFixed(2)};
+else if(s[2]<2.4)rec.safe={pick:"客胜",sp:s[2],conf:"中",reason:"客队占优 SP"+s[2].toFixed(2)};
 else{var bi=s[0]<s[2]?0:2;rec.safe={pick:bi===0?"主胜":"客胜",sp:s[bi],conf:"低",reason:"弱方向 SP"+s[bi].toFixed(2)}}
 // 博冷
-if(up.level>=2){rec.cold=p[2]>0.28?{pick:"客胜",sp:s[2],conf:"高",reason:up.reasons.join("/")}:{pick:"平局",sp:s[1],conf:"中",reason:up.reasons.join("/")}}
+if(a&&a.upsetLevel&&a.upsetLevel!=="低"){var cp=a.spfRec==="主胜"?"客胜":a.spfRec==="客胜"?"主胜":"平局";rec.cold={pick:cp,sp:s[["胜","平","负"].indexOf(cp)],conf:a.upsetLevel==="高"?"高":"中",reason:a.upsetReason}}
+else if(up.level>=2){rec.cold=p[2]>0.28?{pick:"客胜",sp:s[2],conf:"高",reason:up.reasons.join("/")}:{pick:"平局",sp:s[1],conf:"中",reason:up.reasons.join("/")}}
 else if(up.level===1)rec.cold={pick:p[2]>0.25?"客胜":"平局",sp:p[2]>0.25?s[2]:s[1],conf:"中",reason:up.reasons.join("/")};
 else if(sc.score<4)rec.cold={pick:"平局",sp:s[1],conf:"低",reason:"胶着 平局可博"};
 else rec.cold={pick:"无",sp:0,conf:"-",reason:""};
-// 比分
-if(p[0]>0.55)rec.score={pick:"2:0 / 2:1",reason:"主队强势 "+(p[0]*100).toFixed(0)+"%胜率"};
-else if(p[0]>0.40)rec.score={pick:"1:0 / 1:1",reason:"势均力敌 "+(p[0]*100).toFixed(0)+"%胜率"};
-else if(p[2]>0.35)rec.score={pick:"0:1 / 1:2",reason:"客队占优 "+(p[2]*100).toFixed(0)+"%胜率"};
-else if(p[1]>0.30)rec.score={pick:"1:1 / 0:0",reason:"平局概率高 "+(p[1]*100).toFixed(0)+"%"};
-else rec.score={pick:"0:0 / 1:1",reason:"胶着 小比分"};
-return rec;
-}
+// 比分 - 使用分析数据或基于SP推算
+if(a&&a.scoreRec)rec.score={pick:a.scoreRec,reason:a.zjqRec+" 基于盘口+状态分析"};
+else if(p[0]>0.55)rec.score={pick:"2-0 / 2-1",reason:"主队强势 "+(p[0]*100).toFixed(0)+"%胜率"};
+else if(p[0]>0.40)rec.score={pick:"1-0 / 1-1",reason:"势均力敌 "+(p[0]*100).toFixed(0)+"%胜率"};
+else if(p[2]>0.35)rec.score={pick:"0-1 / 1-2",reason:"客队占优 "+(p[2]*100).toFixed(0)+"%胜率"};
+else rec.score={pick:"1-1 / 2-1",reason:"格局开放"};
+return rec}
 
 function generateAIRecommendations(){
 var all=[];
 for(var k in ALL_DATA)for(var i=0;i<ALL_DATA[k].matches.length;i++){
 var m=ALL_DATA[k].matches[i];if(m.spf[0]===0)continue;
-var r=perMatchRecommendations(m);
+var r=perMatchRecommendations(m,k,i);
 all.push({match:m,rec:r,score:calcMatchScore(m),upset:calcUpsetAlert(m)});
 }
 var sf=all.filter(function(a){return a.rec.safe&&a.rec.safe.conf==="高"});sf.sort(function(a,b){return a.rec.safe.sp-b.rec.safe.sp});
@@ -269,19 +279,7 @@ function toggleCheck(el){el.classList.toggle("selected");var card=el.closest(".m
 
 function getPerMatchRecHTML(rec){if(!rec)return'';var h='<div class="per-match-rec">';h+='<div class="per-rec-item per-rec-safe"><div class="pr-label">稳胆</div><div class="pr-value">'+rec.safe.pick+'</div><div class="pr-sp">SP: '+rec.safe.sp.toFixed(2)+'</div></div>';if(rec.cold&&rec.cold.conf!=="-")h+='<div class="per-rec-item per-rec-cold"><div class="pr-label">博冷</div><div class="pr-value">'+rec.cold.pick+'</div><div class="pr-sp">SP: '+rec.cold.sp.toFixed(2)+'</div></div>';h+='<div class="per-rec-item per-rec-score"><div class="pr-label">比分预测</div><div class="pr-value">'+rec.score.pick+'</div><div style="font-size:9px;color:#888">'+rec.score.reason+'</div></div></div>';return h}
 
-function getAnalysisHTML(m,dk,idx){
-if(m.spf[0]===0)return'';
-var rr=calcReturnRate(m.spf),p=calcImpliedProb(m.spf),js=euroToJcSP(m.spf),up=calcUpsetAlert(m),sc=calcMatchScore(m),ha=analyzeHandicap(m),rec=perMatchRecommendations(m);
-var pb='<div class="prob-bar-wrap"><div class="bar-h" style="width:'+(p[0]*100).toFixed(0)+'%"></div><div class="bar-d" style="width:'+(p[1]*100).toFixed(0)+'%"></div><div class="bar-a" style="width:'+(p[2]*100).toFixed(0)+'%"></div></div>';
-var ch=ha.type==='ok'?'<tr><td>穿盘概率</td><td>'+(ha.coverProb*100).toFixed(0)+'% ('+ha.coverLevel+')</td><td>让球方'+(ha.coverProb>0.5?'大概率':'需谨慎')+'穿盘</td></tr><tr><td>让球盘口</td><td>'+(ha.handicap>0?'让'+ha.handicap:'受让'+Math.abs(ha.handicap))+'球</td><td>上盘'+ha.probs[0]+'% / 下盘'+ha.probs[2]+'%</td></tr>':'';
-return'<div class="analysis-detail" id="analysis_'+dk+'_'+idx+'">'+getPerMatchRecHTML(rec)+
-'<table class="analysis-table"><tr><th>指标</th><th>数值</th><th>解读</th></tr>'+
-'<tr><td>返还率</td><td>'+(rr*100).toFixed(1)+'%</td><td>'+(rr>0.9?'市场充分':'正常范围')+'</td></tr>'+
-'<tr><td>市场概率</td><td>胜'+(p[0]*100).toFixed(1)+'% / 平'+(p[1]*100).toFixed(1)+'% / 负'+(p[2]*100).toFixed(1)+'%</td><td>'+pb+'</td></tr>'+
-'<tr><td>竞彩SP预测</td><td>胜'+js[0].toFixed(2)+' / 平'+js[1].toFixed(2)+' / 负'+js[2].toFixed(2)+'</td><td>欧赔×0.71折算</td></tr>'+ch+
-'<tr><td>冷门预警</td><td><span class="alert-badge '+up.cls+'">'+up.text+'</span></td><td>'+(up.reasons.length>0?up.reasons.join("、"):"无明显冷门信号")+'</td></tr>'+
-'<tr><td>综合评分</td><td><span class="score-badge '+sc.level+'">'+sc.score.toFixed(1)+'分</span></td><td>'+sc.text+' ('+(sc.details||[]).join(", ")+')</td></tr></table></div>';
-}
+function getAnalysisHTML(m,dk,i){var ak=dk+'_'+i,a=ANALYSIS[ak];if(!a)return'<div class="analysis-box"><div class="analysis-title">详细分析</div><div class="analysis-content">数据同步中，待SP和情报更新后生成...</div></div>';var u=a.upsetLevel,uc=u==="高"?"#c62828":u==="中"?"#e65100":"#4caf50";var h='';h+='<div class="analysis-box"><div class="analysis-title">'+a.teams+' 详细分析</div><div class="analysis-content">';h+='<div class="analysis-section"><b>近期状态</b><br>主队：'+a.homeForm+'<br>客队：'+a.awayForm+'</div>';h+='<div class="analysis-section"><b>交锋记录</b><br>'+a.h2h+'</div>';h+='<div class="analysis-section"><b>伤病情报</b><br>'+a.injuries+'</div>';h+='<div class="analysis-section" style="background:#fff8e1;border-left:3px solid '+uc+'"><b>冷门预警：'+u+'风险</b><br>'+a.upsetReason+'</div>';h+='<div class="analysis-section"><b>综合研判</b><br>'+a.detail+'</div>';h+='<div class="analysis-section" style="background:#e8f5e9;border-left:3px solid #4caf50"><b>五维推荐</b><br>胜平负：<span style="color:#c62828;font-weight:700">'+a.spfRec+'</span> | 让球：<span style="color:#e65100;font-weight:700">'+a.rqspfRec+'</span> | 比分：<span style="color:#1565c0;font-weight:700">'+a.scoreRec+'</span><br>总进球：<span style="font-weight:700">'+a.zjqRec+'</span> | 半全场：<span style="font-weight:700">'+a.bqcRec+'</span></div></div></div>';return h}
 
 function renderPastResult(m){var r=m.result;if(!r)return'<div style="font-size:11px;color:#999;padding:6px 0;">本场比赛已结束</div>';var h='';h+='<div class="past-score"><div class="final-score">'+r.score.replace("-"," : ")+'</div><div class="ht-score">（半场 '+r.htScore+'）</div></div>';var si=["胜","平","负"].indexOf(r.spf);h+='<div class="past-result-row"><span class="past-result-label">胜平负</span><span class="past-opt hit">'+r.spf+' <span class="past-sp">'+(si>=0&&m.spf[si]>0?m.spf[si].toFixed(2):'-')+'</span></span></div>';var ri=r.rqspf.endsWith("胜")?0:r.rqspf.endsWith("平")?1:2;h+='<div class="past-result-row"><span class="past-result-label">让球</span><span class="past-opt hit">'+r.rqspf+' <span class="past-sp">'+(m.rqspf.v[ri]>0?m.rqspf.v[ri].toFixed(2):'-')+'</span></span></div>';var zi=["0","1","2","3","4","5","6","7+"].indexOf(r.zjq);h+='<div class="past-result-row"><span class="past-result-label">总进球</span><span class="past-opt hit">'+r.zjq+'球 <span class="past-sp">'+(zi>=0&&m.zjq[zi]>0?m.zjq[zi].toFixed(2):'-')+'</span></span></div>';var bi=["胜胜","胜平","胜负","平胜","平平","平负","负胜","负平","负负"].indexOf(r.bqc);h+='<div class="past-result-row"><span class="past-result-label">半全场</span><span class="past-opt hit">'+r.bqc+' <span class="past-sp">'+(bi>=0&&m.bqc[bi]>0?m.bqc[bi].toFixed(2):'-')+'</span></span></div>';var bfIdx=["1:0","2:0","2:1","3:0","3:1","3:2","4:0","4:1","4:2","5:0","5:1","5:2","胜其他","0:0","1:1","2:2","3:3","平其他","0:1","0:2","1:2","0:3","1:3","2:3","0:4","1:4","2:4","0:5","1:5","2:5","负其他"].indexOf(r.bf);h+='<div class="past-result-row"><span class="past-result-label">比分</span><span class="past-opt hit">'+r.bf+' <span class="past-sp">'+(bfIdx>=0&&m.bf[bfIdx]>0?m.bf[bfIdx].toFixed(2):'-')+'</span></span></div>';return h}
 function renderAll(){
