@@ -101,6 +101,12 @@ body{font-family:-apple-system,"Microsoft YaHei",sans-serif;background:#f0f2f5;c
 .sp-display.bqc-display .sp-val{font-size:10px}
 .finished-badge{display:inline-block;padding:2px 7px;border-radius:4px;font-size:10px;font-weight:600;background:#e0e0e0;color:#999}
 
+.finished-result{background:#f0f0f0;border-radius:8px;padding:8px 10px;margin-top:6px}
+.finished-row{display:flex;align-items:center;gap:3px;flex-wrap:wrap;margin-bottom:3px}
+.finished-rq-label{font-size:10px;color:#999;margin:0 2px;white-space:nowrap}
+.finished-bqc-row .sp-display{padding:2px 4px;font-size:9px;min-height:22px}
+.finished-bqc-row .sp-display .sp-val{font-size:9px}
+.finished-bqc-row .sp-display .label{font-size:9px}
 
 .badge{display:inline-block;padding:2px 7px;border-radius:4px;font-size:10px;font-weight:600}
 .badge-red{background:#ffebee;color:#d4213d}
@@ -256,59 +262,53 @@ function getZJQHitIndex(m) {
     if (total >= 7) return 7;
     return total;
 }
-function renderFinishedSPF(m) {
-    var labels = ['胜','平','负'];
-    var hitIdx = getSPFHitIndex(m);
-    var html = '';
+function renderFinishedSummary(m) {
+    var spfHit = getSPFHitIndex(m);
+    var rqHit = getRQSPFHitIndex(m);
+    var bfHit = getBFHitIndex(m);
+    var zjqHit = getZJQHitIndex(m);
+    var s = parseScore(m);
+    var html = '<div class="finished-result">';
+    // Row 1: all SPF + RQSPF options
+    html += '<div class="finished-row">';
+    var spfLabels = ['胜','平','负'];
     for (var j = 0; j < 3; j++) {
         var v = m.spf[j];
-        var cls = 'sp-display' + (j === hitIdx ? ' hit' : '');
-        html += '<span class="'+cls+'"><span class="label">'+labels[j]+'</span><span class="sp-val">'+(v>0?v.toFixed(2):'--')+'</span></span>';
+        var cls = 'sp-display' + (j === spfHit ? ' hit' : '');
+        html += '<span class="'+cls+'"><span class="label">'+spfLabels[j]+'</span><span class="sp-val">'+(v>0?v.toFixed(2):'--')+'</span></span>';
     }
-    return html;
-}
-function renderFinishedRQSPF(m) {
     var hcp = m.rqspf.h;
     var vals = m.rqspf.v;
     var prefix = hcp.charAt(0)==='+' ? '受让' : '让';
-    var labels = [prefix+'胜'+hcp.replace('+',''), '让平', '让负'];
-    var hitIdx = getRQSPFHitIndex(m);
-    var html = '';
-    for (var j = 0; j < 3; j++) {
-        var v = vals[j];
-        var cls = 'sp-display' + (j === hitIdx ? ' hit' : '');
-        html += '<span class="'+cls+'"><span class="label">'+labels[j]+'</span><span class="sp-val">'+(v>0?v.toFixed(2):'--')+'</span></span>';
+    var rqLabels = [prefix+'胜', '让平', '让负'];
+    html += '<span class="finished-rq-label">让球('+hcp+')</span>';
+    for (var k = 0; k < 3; k++) {
+        var v2 = vals[k];
+        var cls2 = 'sp-display' + (k === rqHit ? ' hit' : '');
+        html += '<span class="'+cls2+'"><span class="label">'+rqLabels[k]+'</span><span class="sp-val">'+(v2>0?v2.toFixed(2):'--')+'</span></span>';
     }
-    return html;
-}
-function renderFinishedBF(m) {
-    var hitIdx = getBFHitIndex(m);
-    var html = '';
-    for (var j = 0; j < 31; j++) {
-        var v = m.bf[j];
-        if (j === 13) html += '<span style="display:block;font-size:10px;color:#bbb;margin:2px 0 0 4px;">平局</span>';
-        if (j === 18) html += '<span style="display:block;font-size:10px;color:#bbb;margin:2px 0 0 4px;">客胜</span>';
-        var cls = 'sp-display bf-display' + (j === hitIdx ? ' hit' : '');
-        html += '<span class="'+cls+'"><span class="label">'+BF_LABELS[j]+'</span><span class="sp-val">'+(v>0?v.toFixed(2):'--')+'</span></span>';
+    html += '</div>';
+    // Row 2: hit score + hit total goals (only the matched ones)
+    html += '<div class="finished-row">';
+    if (bfHit >= 0 && s) {
+        var bfSP = m.bf[bfHit];
+        html += '<span class="sp-display hit"><span class="label">比分 '+s.home+':'+s.away+'</span><span class="sp-val">'+(bfSP>0?bfSP.toFixed(2):'--')+'</span></span>';
     }
-    return html;
-}
-function renderFinishedZJQ(m) {
-    var hitIdx = getZJQHitIndex(m);
-    var html = '';
-    for (var j = 0; j < 8; j++) {
-        var v = m.zjq[j];
-        var cls = 'sp-display' + (j === hitIdx ? ' hit' : '');
-        html += '<span class="'+cls+'"><span class="label">'+ZJQ_LABELS[j]+'球</span><span class="sp-val">'+(v>0?v.toFixed(2):'--')+'</span></span>';
+    if (zjqHit >= 0 && s) {
+        var totalGoals = s.home + s.away;
+        var zjqSP = m.zjq[zjqHit];
+        var zjqLbl = totalGoals >= 7 ? '7+球' : totalGoals+'球';
+        html += '<span class="sp-display hit"><span class="label">总进球 '+zjqLbl+'</span><span class="sp-val">'+(zjqSP>0?zjqSP.toFixed(2):'--')+'</span></span>';
     }
-    return html;
-}
-function renderFinishedBQC(m) {
-    var html = '';
+    html += '</div>';
+    // Row 3: all 9 BQC options compact
+    html += '<div class="finished-row finished-bqc-row">';
     for (var j = 0; j < 9; j++) {
-        var v = m.bqc[j];
-        html += '<span class="sp-display bqc-display"><span class="label">'+BQC_LABELS[j]+'</span><span class="sp-val">'+(v>0?v.toFixed(2):'--')+'</span></span>';
+        var v3 = m.bqc[j];
+        html += '<span class="sp-display bqc-display"><span class="label">'+BQC_LABELS[j]+'</span><span class="sp-val">'+(v3>0?v3.toFixed(2):'--')+'</span></span>';
     }
+    html += '</div>';
+    html += '</div>';
     return html;
 }
 
@@ -503,35 +503,28 @@ function renderAll() {
             ? '<div class="chk-col"><span class="finished-badge">已结束</span></div>'
             : '<div class="chk-col"><input type="checkbox" class="match-check" id="chk_'+currentTab+'_'+i+'" onchange="updateCount();updateCardHighlight(this)"></div>';
 
-        // SPF section
-        var spfBody = finished ? renderFinishedSPF(m) : renderSPFSection(m, currentTab, i);
-        var spfHtml = '<div class="play-section always-open">'+
-            '<div class="play-header"><span class="triangle"></span>胜平负</div>'+
-            '<div class="play-body expanded">'+spfBody+'</div></div>';
-
-        // RQSPF section
-        var rqspfBody = finished ? renderFinishedRQSPF(m) : renderRQSPFSection(m, currentTab, i);
-        var rqspfHtml = '<div class="play-section always-open">'+
-            '<div class="play-header"><span class="triangle"></span>让球胜平负（'+m.rqspf.h+'）</div>'+
-            '<div class="play-body expanded">'+rqspfBody+'</div></div>';
-
-        // BF section
-        var bfBody = finished ? renderFinishedBF(m) : renderBFSection(m, currentTab, i);
-        var bfHtml = '<div class="play-section">'+
-            '<div class="play-header" onclick="toggleSection(this)"><span class="triangle">▶</span>比分</div>'+
-            '<div class="play-body">'+bfBody+'</div></div>';
-
-        // ZJQ section
-        var zjqBody = finished ? renderFinishedZJQ(m) : renderZJQSection(m, currentTab, i);
-        var zjqHtml = '<div class="play-section">'+
-            '<div class="play-header" onclick="toggleSection(this)"><span class="triangle">▶</span>总进球</div>'+
-            '<div class="play-body">'+zjqBody+'</div></div>';
-
-        // BQC section
-        var bqcBody = finished ? renderFinishedBQC(m) : renderBQCSection(m, currentTab, i);
-        var bqcHtml = '<div class="play-section">'+
-            '<div class="play-header" onclick="toggleSection(this)"><span class="triangle">▶</span>半全场</div>'+
-            '<div class="play-body">'+bqcBody+'</div></div>';
+        // Play sections: unified compact card for finished, 5 sections for live
+        var playSectionsHtml;
+        if (finished) {
+            playSectionsHtml = renderFinishedSummary(m);
+        } else {
+            playSectionsHtml =
+                '<div class="play-section always-open">'+
+                '<div class="play-header"><span class="triangle"></span>胜平负</div>'+
+                '<div class="play-body expanded">'+renderSPFSection(m, currentTab, i)+'</div></div>'+
+                '<div class="play-section always-open">'+
+                '<div class="play-header"><span class="triangle"></span>让球胜平负（'+m.rqspf.h+'）</div>'+
+                '<div class="play-body expanded">'+renderRQSPFSection(m, currentTab, i)+'</div></div>'+
+                '<div class="play-section">'+
+                '<div class="play-header" onclick="toggleSection(this)"><span class="triangle">▶</span>比分</div>'+
+                '<div class="play-body">'+renderBFSection(m, currentTab, i)+'</div></div>'+
+                '<div class="play-section">'+
+                '<div class="play-header" onclick="toggleSection(this)"><span class="triangle">▶</span>总进球</div>'+
+                '<div class="play-body">'+renderZJQSection(m, currentTab, i)+'</div></div>'+
+                '<div class="play-section">'+
+                '<div class="play-header" onclick="toggleSection(this)"><span class="triangle">▶</span>半全场</div>'+
+                '<div class="play-body">'+renderBQCSection(m, currentTab, i)+'</div></div>';
+        }
 
         html += '<div class="'+cardCls+'" id="card_'+currentTab+'_'+i+'">'+
             '<div class="match-card-top">'+chkHtml+
@@ -547,7 +540,7 @@ function renderAll() {
                     '</div>'+
                 '</div>'+
             '</div>'+
-            spfHtml + rqspfHtml + bfHtml + zjqHtml + bqcHtml +
+            playSectionsHtml +
         '</div>';
     }
     document.getElementById('matchList').innerHTML = html;
