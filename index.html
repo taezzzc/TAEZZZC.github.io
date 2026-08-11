@@ -83,6 +83,24 @@ body{font-family:-apple-system,"Microsoft YaHei",sans-serif;background:#f0f2f5;c
 .check-opt.bqc-opt{padding:3px 5px;font-size:10px;min-height:26px}
 .check-opt.bqc-opt .label{font-size:10px}
 .check-opt.bqc-opt .sp-val{font-size:10px}
+/* Finished match styling */
+.match-card.finished{background:#f5f5f5;border-color:#ddd;opacity:0.85}
+.match-card.finished .match-id{background:#e0e0e0;color:#999}
+.match-card.finished .match-teams{color:#999}
+.match-card.finished .play-header{background:#eee;color:#999}
+.sp-display{display:inline-flex;align-items:center;gap:3px;padding:5px 7px;border:1px solid #e8e8e8;border-radius:6px;font-size:11px;background:#fafafa;white-space:nowrap;margin:2px;min-height:30px;color:#999}
+.sp-display .sp-val{font-weight:700;font-size:12px;color:#999}
+.sp-display.hit{border-color:#4caf50;background:#e8f5e9;color:#2e7d32}
+.sp-display.hit .sp-val{color:#2e7d32;font-size:13px}
+.sp-display.hit .label{color:#2e7d32;font-weight:600}
+/* BF display compact */
+.sp-display.bf-display{padding:4px 6px;font-size:10px;min-height:26px}
+.sp-display.bf-display .sp-val{font-size:11px}
+.sp-display.bqc-display{padding:3px 5px;font-size:10px;min-height:26px}
+.sp-display.bqc-display .label{font-size:10px}
+.sp-display.bqc-display .sp-val{font-size:10px}
+.finished-badge{display:inline-block;padding:2px 7px;border-radius:4px;font-size:10px;font-weight:600;background:#e0e0e0;color:#999}
+
 
 .badge{display:inline-block;padding:2px 7px;border-radius:4px;font-size:10px;font-weight:600}
 .badge-red{background:#ffebee;color:#d4213d}
@@ -198,6 +216,102 @@ var BF_LABELS = [
 var ZJQ_LABELS = ["0","1","2","3","4","5","6","7+"];
 
 var BQC_LABELS = ["胜胜","平胜","负胜","胜平","平平","负平","胜负","平负","负负"];
+
+// ============ FINISHED MATCH HELPERS ============
+function isFinished(m) {
+    return m.note && m.note.indexOf('已结束') >= 0;
+}
+function parseScore(m) {
+    // note format: "已结束 H:A"  or other
+    if (!m.note) return null;
+    var match = m.note.match(/(\d+):(\d+)/);
+    if (match) return {home: parseInt(match[1]), away: parseInt(match[2])};
+    return null;
+}
+function getSPFHitIndex(m) {
+    var s = parseScore(m); if (!s) return -1;
+    if (s.home > s.away) return 0;
+    if (s.home === s.away) return 1;
+    return 2;
+}
+function getRQSPFHitIndex(m) {
+    var s = parseScore(m); if (!s) return -1;
+    var hcp = parseInt(m.rqspf.h) || 0;
+    var adjHome = s.home + hcp;
+    if (adjHome > s.away) return 0;
+    if (adjHome === s.away) return 1;
+    return 2;
+}
+function getBFHitIndex(m) {
+    var s = parseScore(m); if (!s) return -1;
+    var label = s.home + ':' + s.away;
+    for (var i = 0; i < BF_LABELS.length; i++) {
+        if (BF_LABELS[i] === label) return i;
+    }
+    return -1;
+}
+function getZJQHitIndex(m) {
+    var s = parseScore(m); if (!s) return -1;
+    var total = s.home + s.away;
+    if (total >= 7) return 7;
+    return total;
+}
+function renderFinishedSPF(m) {
+    var labels = ['胜','平','负'];
+    var hitIdx = getSPFHitIndex(m);
+    var html = '';
+    for (var j = 0; j < 3; j++) {
+        var v = m.spf[j];
+        var cls = 'sp-display' + (j === hitIdx ? ' hit' : '');
+        html += '<span class="'+cls+'"><span class="label">'+labels[j]+'</span><span class="sp-val">'+(v>0?v.toFixed(2):'--')+'</span></span>';
+    }
+    return html;
+}
+function renderFinishedRQSPF(m) {
+    var hcp = m.rqspf.h;
+    var vals = m.rqspf.v;
+    var prefix = hcp.charAt(0)==='+' ? '受让' : '让';
+    var labels = [prefix+'胜'+hcp.replace('+',''), '让平', '让负'];
+    var hitIdx = getRQSPFHitIndex(m);
+    var html = '';
+    for (var j = 0; j < 3; j++) {
+        var v = vals[j];
+        var cls = 'sp-display' + (j === hitIdx ? ' hit' : '');
+        html += '<span class="'+cls+'"><span class="label">'+labels[j]+'</span><span class="sp-val">'+(v>0?v.toFixed(2):'--')+'</span></span>';
+    }
+    return html;
+}
+function renderFinishedBF(m) {
+    var hitIdx = getBFHitIndex(m);
+    var html = '';
+    for (var j = 0; j < 31; j++) {
+        var v = m.bf[j];
+        if (j === 13) html += '<span style="display:block;font-size:10px;color:#bbb;margin:2px 0 0 4px;">平局</span>';
+        if (j === 18) html += '<span style="display:block;font-size:10px;color:#bbb;margin:2px 0 0 4px;">客胜</span>';
+        var cls = 'sp-display bf-display' + (j === hitIdx ? ' hit' : '');
+        html += '<span class="'+cls+'"><span class="label">'+BF_LABELS[j]+'</span><span class="sp-val">'+(v>0?v.toFixed(2):'--')+'</span></span>';
+    }
+    return html;
+}
+function renderFinishedZJQ(m) {
+    var hitIdx = getZJQHitIndex(m);
+    var html = '';
+    for (var j = 0; j < 8; j++) {
+        var v = m.zjq[j];
+        var cls = 'sp-display' + (j === hitIdx ? ' hit' : '');
+        html += '<span class="'+cls+'"><span class="label">'+ZJQ_LABELS[j]+'球</span><span class="sp-val">'+(v>0?v.toFixed(2):'--')+'</span></span>';
+    }
+    return html;
+}
+function renderFinishedBQC(m) {
+    var html = '';
+    for (var j = 0; j < 9; j++) {
+        var v = m.bqc[j];
+        html += '<span class="sp-display bqc-display"><span class="label">'+BQC_LABELS[j]+'</span><span class="sp-val">'+(v>0?v.toFixed(2):'--')+'</span></span>';
+    }
+    return html;
+}
+
 
 var currentTab = "2026-08-11";
 var currentMode = "spf";
@@ -381,9 +495,46 @@ function renderAll() {
     var html = '';
     for (var i = 0; i < matches.length; i++) {
         var m = matches[i];
-        html += '<div class="match-card" id="card_'+currentTab+'_'+i+'">'+
-            '<div class="match-card-top">'+
-                '<div class="chk-col"><input type="checkbox" class="match-check" id="chk_'+currentTab+'_'+i+'" onchange="updateCount();updateCardHighlight(this)"></div>'+
+        var finished = isFinished(m);
+        var cardCls = 'match-card' + (finished ? ' finished' : '');
+
+        // Checkbox column: disabled for finished matches
+        var chkHtml = finished
+            ? '<div class="chk-col"><span class="finished-badge">已结束</span></div>'
+            : '<div class="chk-col"><input type="checkbox" class="match-check" id="chk_'+currentTab+'_'+i+'" onchange="updateCount();updateCardHighlight(this)"></div>';
+
+        // SPF section
+        var spfBody = finished ? renderFinishedSPF(m) : renderSPFSection(m, currentTab, i);
+        var spfHtml = '<div class="play-section always-open">'+
+            '<div class="play-header"><span class="triangle"></span>胜平负</div>'+
+            '<div class="play-body expanded">'+spfBody+'</div></div>';
+
+        // RQSPF section
+        var rqspfBody = finished ? renderFinishedRQSPF(m) : renderRQSPFSection(m, currentTab, i);
+        var rqspfHtml = '<div class="play-section always-open">'+
+            '<div class="play-header"><span class="triangle"></span>让球胜平负（'+m.rqspf.h+'）</div>'+
+            '<div class="play-body expanded">'+rqspfBody+'</div></div>';
+
+        // BF section
+        var bfBody = finished ? renderFinishedBF(m) : renderBFSection(m, currentTab, i);
+        var bfHtml = '<div class="play-section">'+
+            '<div class="play-header" onclick="toggleSection(this)"><span class="triangle">▶</span>比分</div>'+
+            '<div class="play-body">'+bfBody+'</div></div>';
+
+        // ZJQ section
+        var zjqBody = finished ? renderFinishedZJQ(m) : renderZJQSection(m, currentTab, i);
+        var zjqHtml = '<div class="play-section">'+
+            '<div class="play-header" onclick="toggleSection(this)"><span class="triangle">▶</span>总进球</div>'+
+            '<div class="play-body">'+zjqBody+'</div></div>';
+
+        // BQC section
+        var bqcBody = finished ? renderFinishedBQC(m) : renderBQCSection(m, currentTab, i);
+        var bqcHtml = '<div class="play-section">'+
+            '<div class="play-header" onclick="toggleSection(this)"><span class="triangle">▶</span>半全场</div>'+
+            '<div class="play-body">'+bqcBody+'</div></div>';
+
+        html += '<div class="'+cardCls+'" id="card_'+currentTab+'_'+i+'">'+
+            '<div class="match-card-top">'+chkHtml+
                 '<div class="info-col">'+
                     '<div class="info-row1">'+
                         '<span class="match-id">'+m.id+'</span>'+
@@ -396,37 +547,7 @@ function renderAll() {
                     '</div>'+
                 '</div>'+
             '</div>'+
-
-            // SPF - always expanded
-            '<div class="play-section always-open">'+
-                '<div class="play-header"><span class="triangle"></span>胜平负</div>'+
-                '<div class="play-body expanded">'+renderSPFSection(m, currentTab, i)+'</div>'+
-            '</div>'+
-
-            // RQSPF - always expanded
-            '<div class="play-section always-open">'+
-                '<div class="play-header"><span class="triangle"></span>让球胜平负（'+m.rqspf.h+'）</div>'+
-                '<div class="play-body expanded">'+renderRQSPFSection(m, currentTab, i)+'</div>'+
-            '</div>'+
-
-            // BF - collapsible, default collapsed
-            '<div class="play-section">'+
-                '<div class="play-header" onclick="toggleSection(this)"><span class="triangle">▶</span>比分</div>'+
-                '<div class="play-body">'+renderBFSection(m, currentTab, i)+'</div>'+
-            '</div>'+
-
-            // ZJQ - collapsible, default collapsed
-            '<div class="play-section">'+
-                '<div class="play-header" onclick="toggleSection(this)"><span class="triangle">▶</span>总进球</div>'+
-                '<div class="play-body">'+renderZJQSection(m, currentTab, i)+'</div>'+
-            '</div>'+
-
-            // BQC - collapsible, default collapsed
-            '<div class="play-section">'+
-                '<div class="play-header" onclick="toggleSection(this)"><span class="triangle">▶</span>半全场</div>'+
-                '<div class="play-body">'+renderBQCSection(m, currentTab, i)+'</div>'+
-            '</div>'+
-
+            spfHtml + rqspfHtml + bfHtml + zjqHtml + bqcHtml +
         '</div>';
     }
     document.getElementById('matchList').innerHTML = html;
@@ -447,7 +568,8 @@ function updateCount() {
     var allChecks = document.querySelectorAll('.match-check');
     var c = 0; for (var i = 0; i < allChecks.length; i++) { if (allChecks[i].checked) c++; }
     document.getElementById('selectedCount').textContent = '已选 '+c+' 场';
-    document.getElementById('selectAll').checked = (c === allChecks.length && c > 0);
+    var nonFinished = document.querySelectorAll('.match-check').length - document.querySelectorAll('.match-card.finished .match-check').length;
+    document.getElementById('selectAll').checked = (c === nonFinished && c > 0);
     document.querySelectorAll('.quick-btn').forEach(function(b){
         b.classList.remove('active');
         if (b.textContent === c+'串1') b.classList.add('active');
@@ -457,18 +579,22 @@ function updateCount() {
 function toggleAll() {
     var v = document.getElementById('selectAll').checked;
     document.querySelectorAll('.match-check').forEach(function(c){
-        c.checked = v;
         var card = c.closest('.match-card');
+        if (card && card.classList.contains('finished')) return;
+        c.checked = v;
         if (card) { if (v) card.classList.add('selected-card'); else card.classList.remove('selected-card'); }
     });
     updateCount();
 }
 
 function presetSelect(n) {
-    document.querySelectorAll('.match-check').forEach(function(c,i){
-        c.checked = i < n;
+    var count = 0;
+    document.querySelectorAll('.match-check').forEach(function(c){
         var card = c.closest('.match-card');
-        if (card) { if (i < n) card.classList.add('selected-card'); else card.classList.remove('selected-card'); }
+        if (card && card.classList.contains('finished')) return;
+        c.checked = count < n;
+        if (card) { if (count < n) card.classList.add('selected-card'); else card.classList.remove('selected-card'); }
+        count++;
     });
     document.getElementById('selectAll').checked = false;
     document.querySelectorAll('.quick-btn').forEach(function(b){
@@ -651,8 +777,15 @@ function recalcMulti() {
 }
 
 function resetAll() {
-    document.querySelectorAll('.match-check').forEach(function(c){c.checked=false;});
-    document.querySelectorAll('.match-card').forEach(function(card){card.classList.remove('selected-card');});
+    document.querySelectorAll('.match-check').forEach(function(c){
+        var card = c.closest('.match-card');
+        if (card && card.classList.contains('finished')) return;
+        c.checked = false;
+    });
+    document.querySelectorAll('.match-card').forEach(function(card){
+        if (card.classList.contains('finished')) return;
+        card.classList.remove('selected-card');
+    });
     document.getElementById('selectAll').checked = false;
     document.querySelectorAll('.quick-btn').forEach(function(b){b.classList.remove('active');});
     document.getElementById('selectedCount').textContent = '已选 0 场';
